@@ -5,6 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { StatusBadge } from './StatusBadge';
 import { SourceBadge } from './SourceBadge';
 import confetti from 'canvas-confetti';
+import { getDocumentDownloadUrl } from '@/lib/storage';
 import { 
   X, 
   Building2, 
@@ -413,9 +414,16 @@ export function FDRDetailModal({
                   </div>
 
                   <button
-                    onClick={() => alert(`Simulated secure preview of encrypted file: ${doc.file_name}`)}
-                    className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                    title="Preview Document"
+                    onClick={async () => {
+                      const url = await getDocumentDownloadUrl(doc.file_name);
+                      if (url) {
+                        window.open(url, '_blank');
+                      } else {
+                        alert(`Secure document preview for: ${doc.file_name} (Version ${doc.version}). In Supabase Storage mode, this opens the temporary signed URL.`);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
+                    title="Download / View Signed Document"
                   >
                     <Download className="w-4 h-4" />
                   </button>

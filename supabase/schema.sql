@@ -373,3 +373,24 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
 AFTER INSERT ON auth.users
 FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ------------------------------------------------------------------------------
+-- 13. SUPABASE STORAGE BUCKET SETUP ('fdr-documents')
+-- ------------------------------------------------------------------------------
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+    'fdr-documents',
+    'fdr-documents',
+    false,
+    10485760, -- 10MB
+    ARRAY['application/pdf', 'image/jpeg', 'image/png']
+)
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "Authenticated users can upload FDR documents" ON storage.objects;
+CREATE POLICY "Authenticated users can upload FDR documents" ON storage.objects
+    FOR INSERT TO authenticated WITH CHECK (bucket_id = 'fdr-documents');
+
+DROP POLICY IF EXISTS "Authenticated users can view/download FDR documents" ON storage.objects;
+CREATE POLICY "Authenticated users can view/download FDR documents" ON storage.objects
+    FOR SELECT TO authenticated USING (bucket_id = 'fdr-documents');

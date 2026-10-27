@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
+import { uploadFDRDocument } from '@/lib/storage';
 import { 
   X, 
   Building2, 
@@ -65,30 +66,45 @@ export function NewFDRModal({ isOpen, onClose, onSuccess }: NewFDRModalProps) {
     }, 1000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormErrors([]);
+    setIsSubmitting(true);
 
-    const res = addNewInstrument(
-      {
-        fdr_number: fdrNumber,
-        bank_name: bankName,
-        branch_name: branchName,
-        ifsc_code: ifscCode,
-        amount: Number(amount),
-        issue_date: issueDate,
-        maturity_date: maturityDate,
-        purpose,
-        state: 'Delhi',
-      },
-      selectedFile
-    );
+    try {
+      if (selectedFile) {
+        // Upload to Supabase Storage if configured
+        const uploadRes = await uploadFDRDocument(selectedFile, fdrNumber, 1);
+        if (!uploadRes.success && uploadRes.error) {
+          console.warn('Supabase storage upload note:', uploadRes.error);
+        }
+      }
 
-    if (res.success && res.instrument) {
-      onSuccess(res.instrument.id);
-      onClose();
-    } else if (res.errors) {
-      setFormErrors(res.errors);
+      const res = addNewInstrument(
+        {
+          fdr_number: fdrNumber,
+          bank_name: bankName,
+          branch_name: branchName,
+          ifsc_code: ifscCode,
+          amount: Number(amount),
+          issue_date: issueDate,
+          maturity_date: maturityDate,
+          purpose,
+          state: 'Delhi',
+        },
+        selectedFile
+      );
+
+      if (res.success && res.instrument) {
+        onSuccess(res.instrument.id);
+        onClose();
+      } else if (res.errors) {
+        setFormErrors(res.errors);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
