@@ -82,27 +82,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   // Load from localStorage if present
   useEffect(() => {
-    try {
-      const savedInst = localStorage.getItem(LOCAL_STORAGE_KEY_INSTRUMENTS);
-      if (savedInst) setInstruments(JSON.parse(savedInst));
+    queueMicrotask(() => {
+      try {
+        const savedInst = localStorage.getItem(LOCAL_STORAGE_KEY_INSTRUMENTS);
+        if (savedInst) setInstruments(JSON.parse(savedInst));
 
-      const savedAudit = localStorage.getItem(LOCAL_STORAGE_KEY_AUDIT);
-      if (savedAudit) setAuditLogs(JSON.parse(savedAudit));
+        const savedAudit = localStorage.getItem(LOCAL_STORAGE_KEY_AUDIT);
+        if (savedAudit) setAuditLogs(JSON.parse(savedAudit));
 
-      const savedNotifs = localStorage.getItem(LOCAL_STORAGE_KEY_NOTIFS);
-      if (savedNotifs) setNotifications(JSON.parse(savedNotifs));
+        const savedNotifs = localStorage.getItem(LOCAL_STORAGE_KEY_NOTIFS);
+        if (savedNotifs) setNotifications(JSON.parse(savedNotifs));
 
-      const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY_SETTINGS);
-      if (savedSettings) setSettings(JSON.parse(savedSettings));
+        const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY_SETTINGS);
+        if (savedSettings) setSettings(JSON.parse(savedSettings));
 
-      const savedRole = localStorage.getItem(LOCAL_STORAGE_KEY_USER_ROLE);
-      if (savedRole) {
-        const matchingUser = INITIAL_USERS.find((u) => u.role === savedRole);
-        if (matchingUser) setCurrentUser(matchingUser);
+        const savedRole = localStorage.getItem(LOCAL_STORAGE_KEY_USER_ROLE);
+        if (savedRole) {
+          const matchingUser = INITIAL_USERS.find((u) => u.role === savedRole);
+          if (matchingUser) setCurrentUser(matchingUser);
+        }
+      } catch (e) {
+        console.error('Error loading data from localStorage', e);
       }
-    } catch (e) {
-      console.error('Error loading data from localStorage', e);
-    }
+    });
 
     // Connect to Supabase Auth session if logged in
     const supabase = getSupabase();
@@ -145,23 +147,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY_INSTRUMENTS, JSON.stringify(instruments));
-    } catch (e) {}
+    } catch {}
   }, [instruments]);
 
   useEffect(() => {
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY_AUDIT, JSON.stringify(auditLogs));
-    } catch (e) {}
+    } catch {}
   }, [auditLogs]);
 
   useEffect(() => {
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY_NOTIFS, JSON.stringify(notifications));
-    } catch (e) {}
+    } catch {}
   }, [notifications]);
 
   // Helper to record immutable audit log
-  const logAudit = (action: string, entity: string, entityId: string, oldValue?: any, newValue?: any) => {
+  const logAudit = (action: string, entity: string, entityId: string, oldValue?: Record<string, unknown> | object | null, newValue?: Record<string, unknown> | object | null) => {
     const newEntry: AuditLogEntry = {
       id: `aud_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       user_email: currentUser.email,
@@ -206,7 +208,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCurrentUser(user);
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY_USER_ROLE, role);
-    } catch (e) {}
+    } catch {}
     logAudit('SWITCH_ROLE', 'UserProfile', user.id, { previousRole: currentUser.role }, { newRole: role });
   };
 
@@ -216,7 +218,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const updated = { ...prev, ...newSettings };
       try {
         localStorage.setItem(LOCAL_STORAGE_KEY_SETTINGS, JSON.stringify(updated));
-      } catch (e) {}
+      } catch {}
       logAudit('UPDATE_SETTINGS', 'SystemSettings', 'GLOBAL', prev, updated);
       return updated;
     });

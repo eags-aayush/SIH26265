@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabase } from '@/lib/supabase';
-import { Building2, CheckCircle2, Loader2 } from 'lucide-react';
+import { Building2, Loader2 } from 'lucide-react';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function AuthCallbackPage() {
             router.replace('/');
           }, 2000);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Unexpected auth callback error:', err);
         router.replace('/');
       }

@@ -14,12 +14,9 @@ import {
   AlertTriangle, 
   RotateCw, 
   CheckCircle2, 
-  Clock, 
   Lock, 
-  ExternalLink, 
   Sparkles,
   Download,
-  Upload,
   ArrowRight
 } from 'lucide-react';
 
@@ -91,42 +88,43 @@ export function FDRDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-700 rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl text-slate-100 overflow-hidden my-auto animate-fadeIn">
+    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className="glass-panel border border-slate-700/80 rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl text-slate-100 overflow-hidden my-auto animate-scaleUp">
         {/* Modal Top Bar */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-slate-800/80 bg-slate-950/80 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400 shrink-0">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <h2 className="text-lg font-bold text-white tracking-tight">{instrument.fdr_number}</h2>
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white tracking-tight font-mono">{instrument.fdr_number}</h2>
                 <StatusBadge status={instrument.status} size="sm" />
               </div>
-              <div className="text-xs text-slate-400 mt-0.5">
-                {instrument.institution_name} • AICTE ID: <span className="text-orange-400 font-mono">{instrument.institution_aicte_id}</span>
+              <div className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
+                {instrument.institution_name} • AICTE ID: <span className="text-orange-400 font-mono font-semibold">{instrument.institution_aicte_id}</span>
               </div>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+            className="p-2.5 rounded-xl bg-slate-800/90 text-slate-400 hover:text-white hover:bg-slate-700/90 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-6 overflow-y-auto space-y-6">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-6">
           {/* Notification / Verification Toast Message */}
           {bankResultMsg && (
             <div
-              className={`p-3.5 rounded-xl border text-xs font-medium flex items-center justify-between gap-3 animate-fadeIn ${
+              className={`p-3.5 rounded-2xl border text-xs font-medium flex items-center justify-between gap-3 animate-fadeIn ${
                 bankResultMsg.success
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+                  : 'bg-rose-500/15 border-rose-500/30 text-rose-300'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -220,7 +218,7 @@ export function FDRDetailModal({
 
           {/* Verification Workbench for Scrutiny Officer / Admin */}
           {(currentUser.role === 'scrutiny_officer' || currentUser.role === 'admin') && (
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow space-y-3">
+            <div className="glass-card rounded-2xl p-4 sm:p-5 shadow space-y-3 border border-slate-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-orange-400" />
@@ -234,19 +232,19 @@ export function FDRDetailModal({
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   onClick={handleRuleCheck}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs flex items-center gap-2 transition-colors cursor-pointer"
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer min-h-[44px]"
                 >
-                  <FileText className="w-3.5 h-3.5 text-orange-400" />
+                  <FileText className="w-4 h-4 text-orange-400" />
                   <span>Execute Rule Engine Check</span>
                 </button>
 
                 <button
                   onClick={handleBankVerification}
                   disabled={isVerifying}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center gap-2 transition-all shadow-md shadow-emerald-600/30 disabled:opacity-50 cursor-pointer"
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-600/30 disabled:opacity-50 cursor-pointer min-h-[44px]"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>{isVerifying ? 'Connecting to Bank CBS Gateway...' : 'Execute Bank CBS Verification Adapter'}</span>
+                  <span>{isVerifying ? 'Connecting to Bank CBS Gateway...' : 'Execute Bank CBS Verification'}</span>
                 </button>
               </div>
             </div>
@@ -254,7 +252,7 @@ export function FDRDetailModal({
 
           {/* Discrepancies Panel */}
           {instrument.discrepancies.length > 0 && (
-            <div className="bg-rose-950/20 border border-rose-500/30 rounded-2xl p-4 shadow space-y-3">
+            <div className="bg-rose-950/20 border border-rose-500/30 rounded-2xl p-4 sm:p-5 shadow space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-rose-400">
                   <AlertTriangle className="w-4 h-4" />
@@ -271,18 +269,18 @@ export function FDRDetailModal({
                 {instrument.discrepancies.map((disc) => (
                   <div
                     key={disc.id}
-                    className={`p-3 rounded-xl border text-xs ${
+                    className={`p-3.5 rounded-xl border text-xs ${
                       disc.status === 'open'
                         ? 'bg-rose-900/20 border-rose-500/40 text-rose-200'
                         : 'bg-slate-900 border-slate-800 text-slate-400'
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
+                    <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
+                      <div className="space-y-1">
                         <div className="font-semibold text-white flex items-center gap-2">
-                          <span>{disc.rule_code}</span>
+                          <span className="font-mono">{disc.rule_code}</span>
                           <span
-                            className={`text-[10px] px-2 py-0.2 rounded-full uppercase font-bold ${
+                            className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${
                               disc.severity === 'critical'
                                 ? 'bg-rose-500/30 text-rose-300'
                                 : 'bg-amber-500/30 text-amber-300'
@@ -291,35 +289,36 @@ export function FDRDetailModal({
                             {disc.severity}
                           </span>
                         </div>
-                        <p className="mt-1 leading-relaxed">{disc.message}</p>
+                        <p className="leading-relaxed text-slate-300">{disc.message}</p>
                         {disc.resolution_notes && (
-                          <div className="mt-2 text-[11px] text-emerald-400 bg-emerald-950/40 p-2 rounded-lg border border-emerald-500/30">
+                          <div className="mt-2 text-[11px] text-emerald-400 bg-emerald-950/40 p-2.5 rounded-lg border border-emerald-500/30">
                             <strong>College Resolution:</strong> {disc.resolution_notes}
                           </div>
                         )}
                       </div>
 
                       {disc.status === 'open' && (
-                        <div>
+                        <div className="w-full sm:w-auto shrink-0">
                           {resolvingId === disc.id ? (
-                            <div className="flex flex-col gap-2 min-w-[240px]">
+                            <div className="flex flex-col gap-2 min-w-[260px]">
                               <textarea
                                 value={resolutionText}
                                 onChange={(e) => setResolutionText(e.target.value)}
                                 placeholder="Enter college justification or explanation..."
-                                className="w-full p-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white"
+                                aria-label="Enter college justification"
+                                className="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500"
                                 rows={2}
                               />
                               <div className="flex items-center gap-2 justify-end">
                                 <button
                                   onClick={() => setResolvingId(null)}
-                                  className="px-2 py-1 text-[11px] text-slate-400 hover:text-white"
+                                  className="px-3 py-1.5 text-xs text-slate-400 hover:text-white cursor-pointer min-h-[44px]"
                                 >
                                   Cancel
                                 </button>
                                 <button
                                   onClick={() => handleResolveSubmit(disc.id)}
-                                  className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold"
+                                  className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold cursor-pointer min-h-[44px]"
                                 >
                                   Submit Correction
                                 </button>
@@ -331,7 +330,7 @@ export function FDRDetailModal({
                                 setResolvingId(disc.id);
                                 setResolutionText('');
                               }}
-                              className="px-3 py-1 rounded-lg bg-rose-600/30 hover:bg-rose-600/50 text-rose-200 border border-rose-500/40 text-xs font-medium"
+                              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-rose-600/30 hover:bg-rose-600/50 text-rose-200 border border-rose-500/40 text-xs font-semibold cursor-pointer min-h-[44px] flex items-center justify-center"
                             >
                               Resolve
                             </button>
@@ -347,14 +346,14 @@ export function FDRDetailModal({
 
           {/* Renewal Chain History (Feature 5) */}
           {(instrument.previous_fdr_number || instrument.renewed_fdr_number) && (
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow space-y-2">
+            <div className="glass-card rounded-2xl p-4 sm:p-5 shadow space-y-2 border border-slate-800">
               <div className="flex items-center gap-2 text-indigo-400">
                 <RotateCw className="w-4 h-4" />
                 <h4 className="text-xs font-bold uppercase tracking-wider">
                   Renewal &amp; Predecessor Chain (Lineage)
                 </h4>
               </div>
-              <div className="flex items-center gap-3 text-xs text-slate-300 pt-1">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300 pt-1">
                 {instrument.previous_fdr_number && (
                   <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
                     <span className="text-[10px] text-slate-400 block">Predecessor Matured FDR:</span>
@@ -378,7 +377,7 @@ export function FDRDetailModal({
           )}
 
           {/* Document Management & Version Tree (Feature 2) */}
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow space-y-3">
+          <div className="glass-card rounded-2xl p-4 sm:p-5 shadow space-y-3 border border-slate-800">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-orange-400" />
@@ -393,20 +392,20 @@ export function FDRDetailModal({
               {instrument.documents.map((doc) => (
                 <div
                   key={doc.id}
-                  className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs hover:border-slate-700 transition-colors"
+                  className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between text-xs hover:border-slate-700 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-400 flex items-center justify-center font-bold">
+                    <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center font-bold text-xs shrink-0">
                       PDF
                     </div>
                     <div>
                       <div className="font-semibold text-slate-200 flex items-center gap-2">
-                        <span>{doc.file_name}</span>
-                        <span className="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.2 rounded font-mono">
+                        <span className="truncate max-w-[200px] sm:max-w-xs">{doc.file_name}</span>
+                        <span className="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.2 rounded font-mono shrink-0">
                           v{doc.version}
                         </span>
                       </div>
-                      <div className="text-[10px] text-slate-500">
+                      <div className="text-[10px] text-slate-500 mt-0.5">
                         {doc.doc_type} • {doc.file_size} • Uploaded by {doc.uploaded_by} on{' '}
                         {new Date(doc.uploaded_at).toLocaleDateString()}
                       </div>
@@ -422,8 +421,9 @@ export function FDRDetailModal({
                         alert(`Secure document preview for: ${doc.file_name} (Version ${doc.version}). In Supabase Storage mode, this opens the temporary signed URL.`);
                       }
                     }}
-                    className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
+                    className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
                     title="Download / View Signed Document"
+                    aria-label={`Download document ${doc.file_name}`}
                   >
                     <Download className="w-4 h-4" />
                   </button>
@@ -434,22 +434,22 @@ export function FDRDetailModal({
         </div>
 
         {/* Modal Bottom Action Bar */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+        <div className="p-4 border-t border-slate-800/80 bg-slate-950/80 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
             <button
               onClick={() => onOpenRenewalModal(instrument.id)}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-2 transition-colors cursor-pointer"
+              className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer min-h-[44px]"
             >
-              <RotateCw className="w-3.5 h-3.5" />
+              <RotateCw className="w-4 h-4" />
               <span>Submit Renewal FDR</span>
             </button>
 
             {instrument.status !== 'Released' && (
               <button
                 onClick={() => onOpenReleaseModal(instrument.id)}
-                className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs flex items-center gap-2 transition-colors cursor-pointer"
+                className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer min-h-[44px]"
               >
-                <Lock className="w-3.5 h-3.5" />
+                <Lock className="w-4 h-4" />
                 <span>
                   {instrument.release_request ? 'Inspect Release Workflow' : 'Initiate Release Request'}
                 </span>
@@ -459,7 +459,7 @@ export function FDRDetailModal({
 
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors cursor-pointer min-h-[44px]"
           >
             Close
           </button>

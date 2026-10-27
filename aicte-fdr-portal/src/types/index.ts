@@ -135,8 +135,8 @@ export interface AuditLogEntry {
   action: string;
   entity: string;
   entity_id: string;
-  old_value?: any;
-  new_value?: any;
+  old_value?: Record<string, unknown> | object | null;
+  new_value?: Record<string, unknown> | object | null;
   ip_address: string;
   timestamp: string;
 }

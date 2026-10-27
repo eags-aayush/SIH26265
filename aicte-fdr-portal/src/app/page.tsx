@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { AppProvider, useApp } from '@/context/AppContext';
+import { AppProvider } from '@/context/AppContext';
 import { Header } from '@/components/Header';
 import { DashboardView } from '@/components/DashboardView';
 import { FDRRepositoryView } from '@/components/FDRRepositoryView';

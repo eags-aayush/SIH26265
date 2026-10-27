@@ -31,7 +31,7 @@ export async function uploadFDRDocument(
     const cleanName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
     const filePath = `${cleanFdr}/v${version}_${Date.now()}_${cleanName}`;
 
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from(BUCKET_NAME)
       .upload(filePath, file, {
         cacheControl: '3600',
@@ -43,10 +43,10 @@ export async function uploadFDRDocument(
       return { success: false, error: error.message };
     }
 
-    return { success: true, filePath: data.path };
-  } catch (err: any) {
+    return { success: true, filePath };
+  } catch (err: unknown) {
     console.error('Storage upload exception:', err);
-    return { success: false, error: err.message || 'Upload failed' };
+    return { success: false, error: err instanceof Error ? err.message : 'Upload failed' };
   }
 }
 

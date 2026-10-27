@@ -30,3 +30,7 @@ yarn-error.log*
 next-env.d.ts
 aicte-fdr-portal/next-env.d.ts
 .vercel/
+
+# Python cache
+__pycache__/
+*.py[cod]
