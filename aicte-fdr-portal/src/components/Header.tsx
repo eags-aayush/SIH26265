@@ -16,7 +16,9 @@ import {
   X, 
   Menu,
   Sparkles,
-  Info
+  Info,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -33,6 +35,8 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
     markNotificationAsRead,
     clearAllNotifications,
     runDailyMaturityCheck,
+    theme,
+    toggleTheme,
   } = useApp();
 
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
@@ -110,7 +114,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 
   return (
     <>
-      <header className="border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl sticky top-0 z-40 text-slate-100 shadow-xl transition-all">
+      <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur-xl sticky top-0 z-40 text-slate-100 shadow-sm dark:shadow-xl transition-colors">
         {/* National Banner */}
         <div className="bg-gradient-to-r from-orange-600 via-amber-600 to-emerald-700 py-1 px-4 text-xs font-semibold text-white tracking-wide flex items-center justify-between">
           <div className="flex items-center space-x-2 truncate">
@@ -144,10 +148,10 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-100">
                   AICTE FDR PORTAL
                 </span>
-                <span className="hidden md:inline-block text-[10px] font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30 px-2 py-0.5 rounded-full">
+                <span className="hidden md:inline-block text-[10px] font-bold uppercase tracking-wider bg-orange-500/10 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-2 py-0.5 rounded-full">
                   Security Deposits
                 </span>
               </div>
@@ -163,16 +167,16 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
             <button
               onClick={handleCronRun}
               title="Simulate daily scheduled cron job (Feature 4): evaluates maturity thresholds and dispatches alerts"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 border border-emerald-500/30 transition-all shadow-sm cursor-pointer group min-h-[38px]"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30 transition-all shadow-sm cursor-pointer group min-h-[38px]"
             >
-              <Zap className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-125 transition-transform" />
+              <Zap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 group-hover:scale-125 transition-transform" />
               <span>Simulate Daily Cron</span>
             </button>
 
             {/* Google / Supabase Sign In Button */}
             <button
               onClick={handleGoogleAuth}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all shadow-sm cursor-pointer min-h-[38px]"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-850 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all shadow-sm cursor-pointer min-h-[38px]"
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
                 <path
@@ -195,17 +199,31 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
               <span>{mounted && isSupabaseConfigured() ? 'Supabase Connected' : 'Google Auth'}</span>
             </button>
 
+            {/* Theme Toggle (Light / Dark) */}
+            <button
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to Light Theme (Default)' : 'Switch to Dark Theme'}
+              aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+              className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all shadow-sm cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center group"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:-rotate-12 transition-transform" />
+              )}
+            </button>
+
             {/* Notification Bell */}
             <div className="relative">
               <button
                 onClick={() => setIsNotifsOpen(!isNotifsOpen)}
-                className="relative p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition-colors cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
+                className="relative p-2 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-colors cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
                 title="Notifications & Escalation Alerts"
                 aria-label="View notifications"
               >
                 <Bell className="w-4 h-4" />
                 {unreadNotifsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-extrabold px-1.5 py-0.2 rounded-full border-2 border-slate-950 shadow-[0_0_8px_#f43f5e] animate-pulse">
+                  <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-extrabold px-1.5 py-0.2 rounded-full border-2 border-slate-900 shadow-[0_0_8px_#f43f5e] animate-pulse">
                     {unreadNotifsCount}
                   </span>
                 )}
@@ -214,12 +232,12 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
               {/* Notification Drawer Popover */}
               {isNotifsOpen && (
                 <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl z-50 overflow-hidden animate-scaleUp">
-                  <div className="p-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+                  <div className="p-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-850">
                     <div className="flex items-center gap-2">
-                      <Bell className="w-4 h-4 text-orange-400" />
-                      <span className="font-bold text-sm text-white">Notifications</span>
+                      <Bell className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+                      <span className="font-bold text-sm text-slate-100">Notifications</span>
                       {unreadNotifsCount > 0 && (
-                        <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full font-semibold">
+                        <span className="text-xs bg-orange-500/10 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400 px-2 py-0.5 rounded-full font-semibold">
                           {unreadNotifsCount} new
                         </span>
                       )}
@@ -227,13 +245,13 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={clearAllNotifications}
-                        className="text-[11px] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                        className="text-[11px] text-slate-400 hover:text-slate-100 transition-colors cursor-pointer"
                       >
                         Mark all read
                       </button>
                       <button
                         onClick={() => setIsNotifsOpen(false)}
-                        className="text-slate-400 hover:text-white cursor-pointer"
+                        className="text-slate-400 hover:text-slate-100 cursor-pointer"
                         aria-label="Close notifications"
                       >
                         <X className="w-4 h-4" />
@@ -241,7 +259,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                     </div>
                   </div>
 
-                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-800/60">
+                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-800">
                     {notifications.length === 0 ? (
                       <div className="p-6 text-center text-xs text-slate-400">No active notifications</div>
                     ) : (
@@ -249,20 +267,20 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                         <div
                           key={n.id}
                           onClick={() => markNotificationAsRead(n.id)}
-                          className={`p-3 text-xs cursor-pointer hover:bg-slate-800/50 transition-colors ${
-                            !n.is_read ? 'bg-slate-800/30' : ''
+                          className={`p-3 text-xs cursor-pointer hover:bg-slate-850 transition-colors ${
+                            !n.is_read ? 'bg-orange-500/10' : ''
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
                             <span
                               className={`font-semibold ${
                                 n.type === 'alert'
-                                  ? 'text-rose-400'
+                                  ? 'text-rose-500 dark:text-rose-400'
                                   : n.type === 'warning'
-                                  ? 'text-amber-400'
+                                  ? 'text-amber-500 dark:text-amber-400'
                                   : n.type === 'success'
-                                  ? 'text-emerald-400'
-                                  : 'text-blue-400'
+                                  ? 'text-emerald-500 dark:text-emerald-400'
+                                  : 'text-blue-500 dark:text-blue-400'
                               }`}
                             >
                               {n.title}
@@ -270,7 +288,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                             {!n.is_read && <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0 mt-1 shadow-[0_0_6px_#f97316]" />}
                           </div>
                           <p className="text-slate-300 mt-1 leading-relaxed text-[11px]">{n.message}</p>
-                          <span className="text-[10px] text-slate-500 mt-1 block">
+                          <span className="text-[10px] text-slate-400 mt-1 block">
                             {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>
@@ -296,7 +314,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                 <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl p-2 z-50 animate-scaleUp">
                   <div className="px-3 py-2 border-b border-slate-800 text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center justify-between">
                     <span>Live RBAC Switcher</span>
-                    <Sparkles className="w-3 h-3 text-orange-400" />
+                    <Sparkles className="w-3 h-3 text-orange-500 dark:text-orange-400" />
                   </div>
                   <div className="space-y-1 mt-1">
                     {rolesConfig.map((item) => {
@@ -317,9 +335,9 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                             <Icon className="w-3.5 h-3.5" />
                           </div>
                           <div>
-                            <div className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                            <div className="text-xs font-semibold text-slate-100 flex items-center gap-1.5">
                               {item.title}
-                              {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />}
+                              {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]" />}
                             </div>
                             <div className="text-[10px] text-slate-400 leading-tight mt-0.5">
                               {item.subtitle}
@@ -334,11 +352,24 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
             </div>
           </div>
 
-          {/* Mobile Right Controls: Bell + Hamburger */}
+          {/* Mobile Right Controls: Theme Toggle + Bell + Hamburger */}
           <div className="flex lg:hidden items-center gap-2">
             <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-200 border border-slate-700 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+              aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+              title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-4 h-4 text-amber-500" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+              )}
+            </button>
+
+            <button
               onClick={() => setIsNotifsOpen(!isNotifsOpen)}
-              className="relative p-2 rounded-xl bg-slate-900 text-slate-300 border border-slate-800 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+              className="relative p-2 rounded-xl bg-slate-850 text-slate-200 border border-slate-700 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
               aria-label="Notifications"
             >
               <Bell className="w-4 h-4" />
@@ -349,7 +380,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+              className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-200 border border-slate-700 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -358,7 +389,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
         </div>
 
         {/* Desktop Navigation Tabs Bar */}
-        <div className="hidden lg:block border-t border-slate-850 bg-slate-950/60 px-4 sm:px-6 lg:px-8">
+        <div className="hidden lg:block border-t border-slate-800 bg-slate-950/80 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <nav className="flex space-x-1 sm:space-x-2 py-2 overflow-x-auto">
               {navItems.map((tab) => {
@@ -369,8 +400,8 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                     onClick={() => setActiveTab(tab.id)}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? 'bg-gradient-to-r from-orange-500/20 to-amber-500/20 text-orange-300 border border-orange-500/30 shadow-sm shadow-orange-500/10'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/80 border border-transparent'
+                        ? 'bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 shadow-sm shadow-orange-500/10'
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-850 border border-transparent'
                     }`}
                   >
                     {tab.label}
@@ -389,18 +420,18 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                   className="w-6 h-6 rounded-full border border-slate-700 object-cover"
                 />
               ) : (
-                <div className="w-6 h-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-orange-400">
+                <div className="w-6 h-6 rounded-full bg-slate-850 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-orange-500">
                   {currentUser.name.charAt(0)}
                 </div>
               )}
-              <span className="font-semibold text-slate-200 max-w-[180px] truncate">{currentUser.name}</span>
+              <span className="font-semibold text-slate-100 max-w-[180px] truncate">{currentUser.name}</span>
             </div>
           </div>
         </div>
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden border-t border-slate-800 bg-slate-950 p-4 space-y-4 animate-scaleUp">
+          <div className="lg:hidden border-t border-slate-800 bg-slate-900 p-4 space-y-4 animate-scaleUp">
             <div className="space-y-1">
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block px-2 pb-1">
                 Navigation
@@ -416,19 +447,19 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                     }}
                     className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-colors min-h-[44px] cursor-pointer ${
                       isActive
-                        ? 'bg-orange-500/20 text-orange-300 border border-orange-500/30'
-                        : 'text-slate-300 hover:bg-slate-900'
+                        ? 'bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30'
+                        : 'text-slate-300 hover:bg-slate-850'
                     }`}
                   >
                     <span>{tab.label}</span>
-                    {isActive && <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />}
+                    {isActive && <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />}
                   </button>
                 );
               })}
             </div>
 
             {/* Mobile Role Switcher */}
-            <div className="pt-2 border-t border-slate-850">
+            <div className="pt-2 border-t border-slate-800">
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block px-2 pb-2">
                 Active Perspective (RBAC Role)
               </span>
@@ -444,30 +475,52 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                         setIsMobileMenuOpen(false);
                       }}
                       className={`w-full text-left p-2.5 rounded-xl flex items-center justify-between text-xs transition-colors min-h-[44px] cursor-pointer ${
-                        isSelected ? 'bg-slate-850 border border-slate-700 text-white font-bold' : 'text-slate-400 hover:bg-slate-900'
+                        isSelected
+                          ? 'bg-slate-800 border border-slate-700 text-slate-100 font-bold'
+                          : 'text-slate-400 hover:bg-slate-850'
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-orange-400" />
+                        <Icon className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                         <span>{item.title}</span>
                       </div>
-                      {isSelected && <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />}
+                      {isSelected && <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]" />}
                     </button>
                   );
                 })}
               </div>
             </div>
 
+            {/* Mobile Appearance Theme Switcher */}
+            <div className="pt-2 border-t border-slate-800">
+              <button
+                onClick={toggleTheme}
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-100 border border-slate-700 text-xs font-semibold flex items-center justify-between min-h-[44px] cursor-pointer transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  {theme === 'dark' ? (
+                    <Sun className="w-4 h-4 text-amber-500" />
+                  ) : (
+                    <Moon className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+                  )}
+                  <span>Appearance Theme</span>
+                </div>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
+                  {theme === 'dark' ? 'Dark Mode' : 'Light Mode (Default)'}
+                </span>
+              </button>
+            </div>
+
             {/* Mobile Actions */}
-            <div className="pt-2 border-t border-slate-850 flex flex-col gap-2">
+            <div className="pt-2 border-t border-slate-800 flex flex-col gap-2">
               <button
                 onClick={() => {
                   handleCronRun();
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full py-2.5 rounded-xl bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold flex items-center justify-center gap-2 min-h-[44px] cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30 text-xs font-semibold flex items-center justify-center gap-2 min-h-[44px] cursor-pointer"
               >
-                <Zap className="w-4 h-4 text-emerald-400" />
+                <Zap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>Simulate Daily Cron</span>
               </button>
 
@@ -476,7 +529,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                   handleGoogleAuth();
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full py-2.5 rounded-xl bg-slate-900 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-2 min-h-[44px] cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-2 min-h-[44px] cursor-pointer"
               >
                 <span>Google Auth / Supabase</span>
               </button>

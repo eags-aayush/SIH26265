@@ -22,8 +22,11 @@ import {
 } from '@/lib/mockData';
 import { verifyFDRWithBank } from '@/lib/bankAdapter';
 import { getSupabase } from '@/lib/supabase';
+import { Theme, getThemeFromCookie, setThemeCookie } from '@/lib/theme';
 
 interface AppContextType {
+  theme: Theme;
+  toggleTheme: () => void;
   currentUser: UserProfile;
   allUsers: UserProfile[];
   setCurrentUserRole: (role: UserRole) => void;
@@ -79,6 +82,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('ALL');
   const [selectedBankFilter, setSelectedBankFilter] = useState('ALL');
   const [selectedStateFilter, setSelectedStateFilter] = useState('ALL');
+
+  // Theme state (default 'light')
+  const [theme, setThemeState] = useState<Theme>('light');
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      const initial = getThemeFromCookie();
+      setThemeState(initial);
+      setThemeCookie(initial);
+    });
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme: Theme = theme === 'dark' ? 'light' : 'dark';
+    setThemeState(nextTheme);
+    setThemeCookie(nextTheme);
+  };
 
   // Load from localStorage if present
   useEffect(() => {
@@ -841,6 +861,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   return (
     <AppContext.Provider
       value={{
+        theme,
+        toggleTheme,
         currentUser,
         allUsers: INITIAL_USERS,
         setCurrentUserRole,

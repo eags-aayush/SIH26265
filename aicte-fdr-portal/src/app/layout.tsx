@@ -28,9 +28,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full antialiased dark`}
+      className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full antialiased light`}
+      data-theme="light"
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">{children}</body>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var m=document.cookie.match(/(^|;\\s*)theme=([^;]+)/);var t=m?m[2]:'light';if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.classList.remove('light');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col transition-colors duration-200">
+        {children}
+      </body>
     </html>
   );
 }
