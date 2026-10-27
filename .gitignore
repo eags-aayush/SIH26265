@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+aicte-fdr-portal/node_modules/
+
+# Next.js build output
+.next/
+aicte-fdr-portal/.next/
+out/
+aicte-fdr-portal/out/
+build/
+aicte-fdr-portal/build/
+
+# Local Environment Variables & Secrets (Keep secret!)
+.env
+.env.local
+.env*.local
+aicte-fdr-portal/.env
+aicte-fdr-portal/.env.local
+aicte-fdr-portal/.env*.local
+
+# Debug and System logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.DS_Store
+*.pem
+*.tsbuildinfo
+next-env.d.ts
+aicte-fdr-portal/next-env.d.ts
+.vercel/

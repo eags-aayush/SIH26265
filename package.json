@@ -1,0 +1,11 @@
+{
+  "name": "aicte-security-deposit-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix aicte-fdr-portal run dev",
+    "build": "npm --prefix aicte-fdr-portal run build",
+    "start": "npm --prefix aicte-fdr-portal run start",
+    "lint": "npm --prefix aicte-fdr-portal run lint"
+  }
+}
